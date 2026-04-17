@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Message Integrity System</title>
+
+    <!-- CryptoJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f4f4f4;
+            margin-top: 40px;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            width: 350px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        textarea {
+            width: 100%;
+            height: 70px;
+            margin-top: 10px;
+        }
+
+        select, button {
+            padding: 8px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        .result {
+            margin-top: 10px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+<h2>Secure Message Integrity</h2>
+
+<textarea id="msg" placeholder="Enter message"></textarea>
+
+<select id="algo">
+    <option value="MD5">MD5</option>
+    <option value="SHA1">SHA-1</option>
+    <option value="SHA256">SHA-256</option>
+</select>
+
+<button onclick="generateHash()">Generate Hash</button>
+
+<p class="result" id="output"></p>
+
+<button onclick="copyHash()">Copy Hash</button>
+
+<hr>
+
+<h3>Verify Hash</h3>
+
+<textarea id="verifyMsg" placeholder="Enter message"></textarea>
+<input type="text" id="verifyHash" placeholder="Enter hash" style="width:100%; padding:8px; margin-top:10px;">
+
+<button onclick="verifyHashFunc()">Verify</button>
+
+<p id="verifyResult"></p>
+
+</div>
+
+<script>
+function generateHash() {
+    let msg = document.getElementById("msg").value;
+    let algo = document.getElementById("algo").value;
+
+    if (msg === "") {
+        alert("Enter message!");
+        return;
+    }
+
+    let hash = "";
+
+    if (algo === "MD5") {
+        hash = CryptoJS.MD5(msg).toString();
+    } 
+    else if (algo === "SHA1") {
+        hash = CryptoJS.SHA1(msg).toString();
+    } 
+    else if (algo === "SHA256") {
+        hash = CryptoJS.SHA256(msg).toString();
+    }
+
+    document.getElementById("output").innerText = hash;
+}
+
+function copyHash() {
+    let text = document.getElementById("output").innerText;
+
+    navigator.clipboard.writeText(text);
+    alert("Hash Copied!");
+}
+
+function verifyHashFunc() {
+    let msg = document.getElementById("verifyMsg").value;
+    let inputHash = document.getElementById("verifyHash").value;
+    let algo = document.getElementById("algo").value;
+
+    let newHash = "";
+
+    if (algo === "MD5") {
+        newHash = CryptoJS.MD5(msg).toString();
+    } 
+    else if (algo === "SHA1") {
+        newHash = CryptoJS.SHA1(msg).toString();
+    } 
+    else if (algo === "SHA256") {
+        newHash = CryptoJS.SHA256(msg).toString();
+    }
+
+    if (newHash === inputHash) {
+        document.getElementById("verifyResult").innerText = "✅ Hash Matched!";
+        document.getElementById("verifyResult").style.color = "green";
+    } else {
+        document.getElementById("verifyResult").innerText = "❌ Hash Not Matched!";
+        document.getElementById("verifyResult").style.color = "red";
+    }
+}
+</script>
+
+</body>
+</html>
